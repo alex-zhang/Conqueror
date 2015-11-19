@@ -88,6 +88,12 @@ project.properties
 *.iml
 
 # Build output
-dist
+output
+
+# Gradle
+*/dradle/*
+gradlew
+gradlew.bat
+
 
 
