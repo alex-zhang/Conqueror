@@ -1,0 +1,22 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
+
+    <item android:id="@+id/menuitem_RGBA" android:title="RGBA View"
+        android:orderInCategory="100" app:showAsAction="never" />
+
+    <item android:id="@+id/menuitem_GRAY" android:title="GRAY View"
+        android:orderInCategory="101" app:showAsAction="never" />
+
+    <item android:id="@+id/menuitem_CANNY" android:title="CANNY View"
+        android:orderInCategory="102" app:showAsAction="never" />
+
+    <item android:id="@+id/menuitem_FeatureDetect" android:title="Feature Detect View"
+        android:orderInCategory="103" app:showAsAction="never" />
+
+    <item android:id="@+id/menuitem_ConquerorDetect" android:title="Conqueror Detect View"
+        android:orderInCategory="104" app:showAsAction="never" />
+
+    <item android:id="@+id/menuitem_CallNativeTest" android:title="Call Native Fn"
+        android:orderInCategory="105" app:showAsAction="never" />
+</menu>
