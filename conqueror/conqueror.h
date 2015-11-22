@@ -24,6 +24,5 @@
 //For This Project
 //-----------------------------------------
 #include "conqueror_macros.h"
-// #include "cameraDetector.h"
 
 #endif  // __CONQUEROR_H__

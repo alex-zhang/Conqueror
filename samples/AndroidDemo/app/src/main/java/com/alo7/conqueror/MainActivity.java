@@ -10,11 +10,8 @@ import android.view.SurfaceView;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
-import org.opencv.android.LoaderCallbackInterface;
-import org.opencv.android.OpenCVLoader;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
@@ -96,14 +93,14 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
     }
 
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
+        destorCurCameraViewFrameColorMat();
+
         Mat cameraViewFrameRGBAColorMat = inputFrame.rgba();
         Mat cameraViewFrameGRAYColorMat = inputFrame.gray();
 
-         switch(mCameraViewColorMode) {
-            case R.id.menuitem_RGBA:
-                mCameraViewFrameColorMat = cameraViewFrameRGBAColorMat;
-                break;
+        mCameraViewFrameColorMat = cameraViewFrameRGBAColorMat;
 
+         switch(mCameraViewColorMode) {
             case R.id.menuitem_GRAY:
                 mCameraViewFrameColorMat = cameraViewFrameGRAYColorMat;
                 break;
@@ -115,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
                 break;
 
             case R.id.menuitem_FeatureDetect:
-                ConquerorJNI.featuresDetect(cameraViewFrameRGBAColorMat.getNativeObjAddr(), cameraViewFrameGRAYColorMat.getNativeObjAddr());
+                ConquerorJNI.featuresDetect(mCameraViewFrameColorMat.getNativeObjAddr());
                 break;
 
             case R.id.menuitem_ConquerorDetect:
@@ -141,6 +138,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         mCameraViewColorMode = itemId;
 
         if(itemId == R.id.menuitem_CallNativeTest) {
+//            ConquerorJNI.stringFromJNI();
             Toast.makeText(this, ConquerorJNI.stringFromJNI(), Toast.LENGTH_LONG).show();
         }
 

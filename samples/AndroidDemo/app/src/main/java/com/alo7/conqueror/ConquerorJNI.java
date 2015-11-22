@@ -7,6 +7,6 @@ public class ConquerorJNI {
 
     //for debug test
     static public native String stringFromJNI();
-    static public native void featuresDetect(long grayMatAddr, long rgbaMatAddr);
+    static public native void featuresDetect(long imgMatAddr);
     static public native void arucoDetect(long grayMatAddr, long rgbaMatAddr);
 }
