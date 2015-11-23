@@ -18,8 +18,8 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/features2d/features2d.hpp>
 
-// #include <aruco/aruco.h>
-// #include <aruco/cvdrawingutils.h>
+#include "aruco/aruco.h"
+#include "aruco/cvdrawingutils.h"
 
 //For This Project
 //-----------------------------------------

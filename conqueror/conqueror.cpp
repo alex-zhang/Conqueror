@@ -2,6 +2,7 @@
 
 using namespace std;
 using namespace cv;
+using namespace aruco;
 
 extern "C" {
   //for java debug test
@@ -12,36 +13,54 @@ extern "C" {
 
   JNIEXPORT void JNICALL Java_com_alo7_conqueror_ConquerorJNI_featuresDetect(JNIEnv*, jclass cls, jlong imgMatAddr) {
     Mat& imgMat = *(Mat*)imgMatAddr;
-    vector<KeyPoint> v;
-
+    vector<KeyPoint> keyPoints;
     Ptr<FeatureDetector> detector = FastFeatureDetector::create(50);
-    detector->detect(imgMat, v);
+    detector->detect(imgMat, keyPoints);
 
-    const int n = v.size();
-    //for debug draw.
-    for( unsigned int i = 0; i < n; i++ ) {
-        const KeyPoint& kp = v[i];
-        circle(imgMat, Point(kp.pt.x, kp.pt.y), 10, Scalar(255,0,0,255));
+    const int n = keyPoints.size();
+    //debug draw.
+    Scalar color = Scalar(255, 0, 0, 255);
+    for(unsigned int i = 0; i < n; i++ ) {
+        const KeyPoint& kp = keyPoints[i];
+        circle(imgMat, Point(kp.pt.x, kp.pt.y), 10, color);
     }
     
     // test draw 
-    circle(imgMat, Point(50, 50), 10, Scalar(255,0,0,255));
-
+    //circle(imgMat, Point(50, 50), 10, Scalar(255,0,0,255));
     __android_log_print(ANDROID_LOG_DEBUG, CQRO_LOG_TAG, "Java_com_alo7_conqueror_ConquerorJNI_featuresDetect");
   }
 
-  JNIEXPORT void JNICALL Java_com_alo7_conqueror_ConquerorJNI_arucoDetect(JNIEnv*, jclass cls, jlong grayMatAddr, jlong rgbaMatAddr) {
-    // Mat& grayMat  = *(Mat*)grayMatAddr;
-    // Mat& rgbaMat = *(Mat*)rgbaMatAddr;
-    // vector<KeyPoint> v;
+  JNIEXPORT void JNICALL Java_com_alo7_conqueror_ConquerorJNI_arucoDetect(JNIEnv*, jclass cls, jlong imgSrcMatAddr, jlong imgBinMatAddr) {
+    Mat& imgSrcMat = *(Mat*)imgSrcMatAddr;
+    Mat& imgBinMat = *(Mat*)imgBinMatAddr;
 
-    // Ptr<FeatureDetector> detector = FastFeatureDetector::create(50);
-    // detector->detect(grayMat, v);
-    // for( unsigned int i = 0; i < v.size(); i++ ) {
-    //     const KeyPoint& kp = v[i];
-    //     circle(rgbaMat, Point(kp.pt.x, kp.pt.y), 10, Scalar(255,0,0,255));
-    // }
-    __android_log_print(ANDROID_LOG_DEBUG, CQRO_LOG_TAG, "Java_com_alo7_conqueror_ConquerorJNI_arucoDetect");
+    MarkerDetector arucoMarkerDetector;
+    vector<Marker> arucoMarkers;
+    int n = 0;
+
+    // if(waitKey (30) >= 0) return;
+
+    try {
+      arucoMarkerDetector.detect(imgBinMat, arucoMarkers);
+      n = arucoMarkers.size();
+    }
+    catch (exception &ex) {
+      cout<<"Java_com_alo7_conqueror_ConquerorJNI_arucoDetect :"<<ex.what()<<endl;
+    }
+
+    //debug draw.
+    //for each marker, draw info and its boundaries in the image
+    Scalar color = Scalar(255, 0, 0, 255);
+    for (unsigned int i = 0; i < n; i++ ) {
+      // CvDrawingUtils::draw3dCube(imgSrcMat, marker, params_);
+        arucoMarkers[i].draw(imgSrcMat, color);
+    }
+  
+    //waitKey(0);//wait for key to be pressed
+
+    // test draw 
+    // circle(imgMat, Point(50, 50), 30, Scalar(255,0,0,255));    
+    __android_log_print(ANDROID_LOG_DEBUG, CQRO_LOG_TAG, "Java_com_alo7_conqueror_ConquerorJNI_arucoDetect n: %d", n);
   }
 
   //--

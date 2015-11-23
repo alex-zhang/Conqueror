@@ -27,6 +27,8 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
     private int cameraSizeWidth;
     private int cameraSizeHeight;
 
+    private int doubleThresholdValue = 100;
+
     static {
         System.loadLibrary("opencv_java3");
         System.loadLibrary("conqueror");
@@ -105,6 +107,18 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
                 mCameraViewFrameColorMat = cameraViewFrameGRAYColorMat;
                 break;
 
+             case R.id.menuitem_DoubleThreshold_50:
+                 Imgproc.threshold(cameraViewFrameGRAYColorMat, cameraViewFrameRGBAColorMat, 50, 255, Imgproc.THRESH_BINARY);
+                 break;
+
+             case R.id.menuitem_DoubleThreshold_100:
+                 Imgproc.threshold(cameraViewFrameGRAYColorMat, cameraViewFrameRGBAColorMat, 100, 255, Imgproc.THRESH_BINARY);
+                 break;
+
+             case R.id.menuitem_DoubleThreshold_200:
+                 Imgproc.threshold(cameraViewFrameGRAYColorMat, cameraViewFrameRGBAColorMat, 200, 255, Imgproc.THRESH_BINARY);
+                 break;
+
             case R.id.menuitem_CANNY:
                 mCameraViewFrameColorMat = new Mat(cameraSizeHeight, cameraSizeWidth, CvType.CV_8UC4);
                 Imgproc.Canny(cameraViewFrameGRAYColorMat, mCameraViewFrameColorMat, 80, 100);
@@ -112,10 +126,11 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
                 break;
 
             case R.id.menuitem_FeatureDetect:
-                ConquerorJNI.featuresDetect(mCameraViewFrameColorMat.getNativeObjAddr());
+                ConquerorJNI.featuresDetect(cameraViewFrameRGBAColorMat.getNativeObjAddr());
                 break;
 
             case R.id.menuitem_ConquerorDetect:
+                Imgproc.threshold(cameraViewFrameGRAYColorMat, cameraViewFrameGRAYColorMat, doubleThresholdValue, 255, Imgproc.THRESH_BINARY);
                 ConquerorJNI.arucoDetect(cameraViewFrameRGBAColorMat.getNativeObjAddr(), cameraViewFrameGRAYColorMat.getNativeObjAddr());
                 break;
         }
@@ -137,9 +152,22 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
 
         mCameraViewColorMode = itemId;
 
-        if(itemId == R.id.menuitem_CallNativeTest) {
-//            ConquerorJNI.stringFromJNI();
-            Toast.makeText(this, ConquerorJNI.stringFromJNI(), Toast.LENGTH_LONG).show();
+        switch(itemId) {
+            case R.id.menuitem_CallNativeTest:
+                Toast.makeText(this, ConquerorJNI.stringFromJNI(), Toast.LENGTH_LONG).show();
+                break;
+
+            case R.id.menuitem_DoubleThreshold_50:
+                doubleThresholdValue = 50;
+                break;
+
+            case R.id.menuitem_DoubleThreshold_100:
+                doubleThresholdValue = 100;
+                break;
+
+            case R.id.menuitem_DoubleThreshold_200:
+                doubleThresholdValue = 200;
+                break;
         }
 
         Log.d(TAG, "MenuIemSelected " + item.getTitle());
